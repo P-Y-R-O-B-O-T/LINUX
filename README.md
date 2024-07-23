@@ -478,40 +478,44 @@ net.ipv6.conf.all.forwarding=1
 | `man fstab` | See halp for `/etc/fstab` file |
 | `blkid /dev/PARTITION_NAME` | Get UUID of partition on he bulk device |
 
-### AUTOMATICALLY MOUNT FILESYSTEMS
-* `/etc/fstab` is the file where all mounts are defined
-* The format is `/dev/PARTITION_NAME MOUNT_POINT FILESYSTEM MOUNT_OPTIONS DUMP_VALUE CORRUPTION_ERROR_HANDLE`
-    - `FILESYSTEM` can be `ext4`, `xfs` and many more
-    - `MOUNT_POINT` is the absolute path
-    - `MOUNT_OPTIONS` normally we use it with value `defaults`
-    - `DUMP_VALUE` is used for backup of this filesystem : `0` for disable `1` for enable
-    - `CORRUPTION_ERROR_HANDLE` to decide what to do when error is encountered, we generally use the value `2`
-        - `0` means never scan the filesystem for errors
-        - `1` means scan before the oter ones, generally for root filesystem of os
-        - `2` scan the fs when the ones with value `1` are scanned
+> [!TIP]
+> ### AUTOMATICALLY MOUNT FILESYSTEMS
+> * `/etc/fstab` is the file where all mounts are defined
+> * The format is `/dev/PARTITION_NAME MOUNT_POINT FILESYSTEM MOUNT_OPTIONS DUMP_VALUE CORRUPTION_ERROR_HANDLE`
+>     - `FILESYSTEM` can be `ext4`, `xfs` and many more
+>     - `MOUNT_POINT` is the absolute path
+>     - `MOUNT_OPTIONS` normally we use it with value `defaults`
+>     - `DUMP_VALUE` is used for backup of this filesystem : `0` for disable `1` for enable
+>     - `CORRUPTION_ERROR_HANDLE` to decide what to do when error is encountered, we generally use the value `2`
+>         - `0` means never scan the filesystem for errors
+>         - `1` means scan before the oter ones, generally for root filesystem of os
+>         - `2` scan the fs when the ones with value `1` are scanned
 
-### CREATE and MOUNT SWAP PERSISTENTLY
-* Change the `/etc/fstab` and enter the following
-* `/dev/PARTITION_NAME none swap defaults 0 0`, where PARTITION_NAME is the swap partition we created using the `cfdisk` tool
-* Run `swapon --show` to ensure it is being used as swap
+> [!TIP]
+> ### CREATE and MOUNT SWAP PERSISTENTLY
+> * Change the `/etc/fstab` and enter the following
+> * `/dev/PARTITION_NAME none swap defaults 0 0`, where PARTITION_NAME is the swap partition we created using the `cfdisk` tool
+> * Run `swapon --show` to ensure it is being used as swap
 
-### ENSURING CORRECT FUNCTIONALITY
-* Sometimes a computer have multiple ssd or hdd slots and changing the disks from one to other slots can lead to bad results, so we use UUID of a bulk device instead of `sdx`, because `sdx` is relative to ports and slots in motherboard and the time sequence of connecting the devices and we can see entrien in `/etc/fstab` whick look like `/dev/disk/by-uuid/75a33bb5-cbb7-4b02-bccf-1fb5cad46ea5 /boot ext4 defaults 0 1` which follows the format `/dev/disk/by-uuid/UUID MOUNT_POINT FILESYSTEM MOUNT_OPTIONS DUMP_VALUE CORRUPTION_ERROR_HANDLE`
-* To get UUID of a bulk device `blkid /dev/PARTITION_NAME` or we can see 
+> [!IMPORTANT]
+> ### ENSURING CORRECT FUNCTIONALITY
+> * Sometimes a computer have multiple ssd or hdd slots and changing the disks from one to other slots can lead to bad results, so we use UUID of a bulk device instead of `sdx`, because `sdx` is relative to ports and slots in motherboard and the time sequence of connecting the devices and we can see entrien in `/etc/fstab` whick look like `/dev/disk/by-uuid/75a33bb5-cbb7-4b02-bccf-1fb5cad46ea5 /boot ext4 defaults 0 1` which follows the format `/dev/disk/by-uuid/UUID MOUNT_POINT FILESYSTEM MOUNT_OPTIONS DUMP_VALUE CORRUPTION_ERROR_HANDLE`
+> * To get UUID of a bulk device `blkid /dev/PARTITION_NAME` or we can see 
 
-### MOUNT OPTIONS 
-
-| COMMAND | EFFECT |
-| ------- | ------ |
-| `mount -o MOUNT_OPTIONS /dev/PARTITION_NAME MOUNT_POINT` | Provide mount options to the mount, `MOUNT_OPTIONS` are in csv with no space |
-| `man mount` | See mount options details |
-| `man FILESYSTEM` | See mount options of the filesystem |
-
-* Mount options can be `ro`, `rw`, `noexec`, `nosuid`, `remount`
-* `nosuid` disables commands running in sudo mode without sudo permissions
-* `remount` allows to mount the filesystem again with new options
-* There are some filesystem specific mount options that we can see by `man FILESYSTEM` and the `remount` option might not work while specifying these options
-* We can write the `MOUNT_OPTIONS` in `/etc/fstab` just like we did here
+> [!IMPORTANT]
+> ### MOUNT OPTIONS 
+>
+> | COMMAND | EFFECT |
+> | ------- | ------ |
+> | `mount -o MOUNT_OPTIONS /dev/PARTITION_NAME MOUNT_POINT` | Provide mount options to the mount, `MOUNT_OPTIONS` are in csv with no space |
+> | `man mount` | See mount options details |
+> | `man FILESYSTEM` | See mount options of the filesystem |
+>
+> * Mount options can be `ro`, `rw`, `noexec`, `nosuid`, `remount`
+> * `nosuid` disables commands running in sudo mode without sudo permissions
+> * `remount` allows to mount the filesystem again with new options
+> * There are some filesystem specific mount options that we can see by `man FILESYSTEM` and the `remount` option might not work while specifying these options
+> * We can write the `MOUNT_OPTIONS` in `/etc/fstab` just like we did here
 
 ## REMOTE FILESYSTEMS
 
@@ -538,7 +542,7 @@ net.ipv6.conf.all.forwarding=1
 > * Example entry : `/home/huhu slender_raspi_0(rw,sync,no_subterr_check,no_root_squash) slender_raspi_1(ro,sync,no_root_squash)`
 > * Wildcard example entry : `/home/huhu *.example.com(ro,sync)` this allows all computers to access the share which end with `.example.com` this happens due to regex expression
 > * To share with everyone, use `*` in `CIDR_HOSTNAME_IP_DOMAINNAME` instead of IP or CIDR or domain or hostname
-
+>
 > * We can create this mount come alive automatically every time the computer boots up by editing the `/etc/fstab`
 > * The syntax for this would be `HOSTNAME_IP_DOMAINNAME:/PATH_TO_REMOTE_DIRECTORY MOUNT_POINT nfs defaults 0 0`
 
