@@ -78,6 +78,9 @@
 * See existing systemd files at `/lib/systemd/system`
 
 ## DIAGNOSE and MANAGE PROCESSES
+
+| COMMAND | EFFECT |
+| ------- | ------ |
 | `man ps /EXAMPLES` | See most used `ps` examples |
 | `ps` | List processes running in current terminal session |
 | `ps -aux` | List all processes, processes shown in bracket area are privilaged processes running in kernel mode |
