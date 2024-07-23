@@ -9,6 +9,7 @@
 > | `man COMMAND` |
 > | `man man` |
 >> [!note] huhu
+>> desc
 
 
 ## LOG INTO LOCAL and REMOTE CONSOLES
