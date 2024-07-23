@@ -636,10 +636,10 @@ net.ipv6.conf.all.forwarding=1
 > * By default all these volumes are just spaces, but they are not useful until we create a filesystem on them
 > * Create the filesystem using `mkfs.ext4` like commands
 >
-> > [!TIP]
-> > #### RESIZE LOGICAL VOLUME WITH FILESYSTEM
-> > * When we normally run the `lvresize` command on the it extends the volume but the filesystem does remaint the same as before as it was not notified
-> > * So solve this issue, we pass the `--resizefs` argument
+>> [!TIP]
+>> #### RESIZE LOGICAL VOLUME WITH FILESYSTEM
+>> * When we normally run the `lvresize` command on the it extends the volume but the filesystem does remaint the same as before as it was not notified
+>> * So solve this issue, we pass the `--resizefs` argument
 
 ## STORAGE MONITORING
 
