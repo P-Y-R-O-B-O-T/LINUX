@@ -1,4 +1,4 @@
-## LOG INTO LOCAL AND REMOTE CONSOLES
+## LOG INTO LOCAL and REMOTE CONSOLES
 * **Vertual Terminal:** A built-in feature of the Linux operating system that allows users to access multiple windows terminal sessions from a single physical console, press `ctrl+alt+F2`
 * **Console:** A system console is the device which receives all kernel messages and warnings and which allows logins in single user mode
 * **Terminal Emulator:** A computer program that emulates a video terminal within some other display architecture
@@ -170,11 +170,11 @@
 
 * We can also edit the existing file `/etc/sysctl.conf`
 
-### MAKE PERSISTENT CHANGE
-* Make a file `touch /etc/sysctl.d/FILE_NAME.conf`, we can give any name
-* Add the line `vm.swappiness=20` and then save, this makes the vm less swappy
-* This will persist even after reboot
-* These changes normally apply after reboot, to get into action quickly run `sysctl -p /etc/sysctl.d/FILE_NAME.conf`
+> ### MAKE PERSISTENT CHANGE
+> * Make a file `touch /etc/sysctl.d/FILE_NAME.conf`, we can give any name
+> * Add the line `vm.swappiness=20` and then save, this makes the vm less swappy
+> * This will persist even after reboot
+> * These changes normally apply after reboot, to get into action quickly run `sysctl -p /etc/sysctl.d/FILE_NAME.conf`
 
 ## CREATE DELETE MODIFY USER and GROUPS
 
@@ -434,7 +434,7 @@ net.ipv6.conf.all.forwarding=1
 * Select `write` option to write the changes to the device
 * Select `write` option to write the changes to the device
 
-### CREATE AND MANAGE SWAP USING DEVICES
+### CREATE and MANAGE SWAP USING DEVICES
 * Create a swap partition using the `cfdisk` tool on a device 
 * Create a swap using `mkswap --verbose /dev/PARTITION_NAME`
 
@@ -448,7 +448,7 @@ net.ipv6.conf.all.forwarding=1
 * Memory content will be written by linux to it, so we should restrict access to ensure salefy by `chmod 600 /swap`
 * Then we declare it as swap `mkswap /swap`
 
-## CREATE AND CONFIGURE FILE SYSTEM
+## CREATE and CONFIGURE FILE SYSTEM
 
 | COMMAND | EFFECT |
 | ------- | ------ |
@@ -489,7 +489,7 @@ net.ipv6.conf.all.forwarding=1
         - `1` means scan before the oter ones, generally for root filesystem of os
         - `2` scan the fs when the ones with value `1` are scanned
 
-### CREATE AND MOUNT SWAP PERSISTENTLY
+### CREATE and MOUNT SWAP PERSISTENTLY
 * Change the `/etc/fstab` and enter the following
 * `/dev/PARTITION_NAME none swap defaults 0 0`, where PARTITION_NAME is the swap partition we created using the `cfdisk` tool
 * Run `swapon --show` to ensure it is being used as swap
@@ -580,7 +580,7 @@ net.ipv6.conf.all.forwarding=1
 * This gives debug message telling that `/dev/nbdN` device is connected, now we can use this device
 * After completion task, disconnect the device
 
-## LVM SETUP AND MANAGEMENT
+## LVM SETUP and MANAGEMENT
 * LVM is the technology that allows to create one partition logically using 2 or more free space partitions on the same disk by joining them logically and representing them as one.
 * All logical volumes are found at `/dev/GROUP_NAME/PARTITION_NAME`
 
@@ -608,7 +608,7 @@ net.ipv6.conf.all.forwarding=1
     - Volume group
     - Physical Extent
 
-### HOW TO CREATE AND USE
+### HOW TO CREATE and USE
 * See available disks and partitions using `lvmdiskscan`
 * Create logical volumes
 * Create a volume group with multiple logical volumes and then these will work as they were a single unit
