@@ -1,20 +1,23 @@
+> [!TIP]
+> ### READ SYSTEM DOCS
+> 
+> | HELP COMMANDS |
+> | ------------- |
+> | `COMMAND --help` |
+> | `man COMMAND` |
+> | `man man` |
+
+* Many tools and file have docs at  `/usr/share/doc`
+* `appropos ROUGH_COMMAND`, to search for a command, but before running this initialize a database using `sudo mandb`
+
+
+
 ## LOG INTO LOCAL and REMOTE CONSOLES
 * **Vertual Terminal:** A built-in feature of the Linux operating system that allows users to access multiple windows terminal sessions from a single physical console, press `ctrl+alt+F2`
 * **Console:** A system console is the device which receives all kernel messages and warnings and which allows logins in single user mode
 * **Terminal Emulator:** A computer program that emulates a video terminal within some other display architecture
 * To get all ip addresses associated with your system, run `ip a`
 * To ssh into a system, run `ssh USER@IP_HOST_NAME -p PORT`
-
-## READ SYSTEM DOCS
-
-| HELP COMMANDS |
-| ------------- |
-| `COMMAND --help` |
-| `man COMMAND` |
-| `man man` |
-
-* Many tools and file have docs at  `/usr/share/doc`
-* `appropos ROUGH_COMMAND`, to search for a command, but before running this initialize a database using `sudo mandb`
 
 ## SAFELY BOOT REBOOT
 
