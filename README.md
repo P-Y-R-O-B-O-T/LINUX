@@ -170,7 +170,7 @@
 
 * We can also edit the existing file `/etc/sysctl.conf`
 
-> [!NOTE] HUHU
+> [!TIP]
 > ### MAKE PERSISTENT CHANGE
 > * Make a file `touch /etc/sysctl.d/FILE_NAME.conf`, we can give any name
 > * Add the line `vm.swappiness=20` and then save, this makes the vm less swappy
@@ -524,23 +524,24 @@ net.ipv6.conf.all.forwarding=1
 | `mount HOSTNAME_IP_DOMAINNAME:PATH_TO_REMOTE_DIRECTORY MOUNT_POINT` | Mount a remote directory on a local directory |
 | `umount MOUNT_POINT` | Unmount NFS share |
 
-### SHARING DIRECTORIES
-* We need to tell the NFS server about the directories that need to be shared
-* We do it by editing `/etc/exports`
-* All entries in it are in the format `DIRECTORY_PATH CIDR_HOSTNAME_IP_DOMAINNAME(EXPORT_OPTIONS)`
-    - `DIRECTORY_PATH` is the path that we want to share
-    - `CIDR_HOSTNAME_IP_DOMAINNAME` this allows to define who can access the data in either of the format
-    - `EXPORT_OPTIONS` defines the properties of the shared directory that need to followed to control the access, some important properties are
-        - `rw`, `ro` - to define read only or read write access
-        - `rsync`, `async` fro asynchronous writes (fast but does not guarantee writes in worst situations), `sync` for synchronous writes (slow but guaranteed the write option)
-        - `no_root_squash` allows root user on NFS client to have root privilages on a remote NFS share they mount, by default NFS squashes root privilages (do not allow to be root on the NFS server shared directory)
-        - `no_subterr_check` no checking for existing files and directories, increases speed but at cost of verification
-* Example entry : `/home/huhu slender_raspi_0(rw,sync,no_subterr_check,no_root_squash) slender_raspi_1(ro,sync,no_root_squash)`
-* Wildcard example entry : `/home/huhu *.example.com(ro,sync)` this allows all computers to access the share which end with `.example.com` this happens due to regex expression
-* To share with everyone, use `*` in `CIDR_HOSTNAME_IP_DOMAINNAME` instead of IP or CIDR or domain or hostname
+> [!IMPORTANT]
+> ### SHARING DIRECTORIES
+> * We need to tell the NFS server about the directories that need to be shared
+> * We do it by editing `/etc/exports`
+> * All entries in it are in the format `DIRECTORY_PATH CIDR_HOSTNAME_IP_DOMAINNAME(EXPORT_OPTIONS)`
+>     - `DIRECTORY_PATH` is the path that we want to share
+>     - `CIDR_HOSTNAME_IP_DOMAINNAME` this allows to define who can access the data in either of the format
+>     - `EXPORT_OPTIONS` defines the properties of the shared directory that need to followed to control the access, some important properties are
+>         - `rw`, `ro` - to define read only or read write access
+>         - `rsync`, `async` fro asynchronous writes (fast but does not guarantee writes in worst situations), `sync` for synchronous writes (slow but guaranteed the write option)
+>         - `no_root_squash` allows root user on NFS client to have root privilages on a remote NFS share they mount, by default NFS squashes root privilages (do not allow to be root on the NFS server shared directory)
+>         - `no_subterr_check` no checking for existing files and directories, increases speed but at cost of verification
+> * Example entry : `/home/huhu slender_raspi_0(rw,sync,no_subterr_check,no_root_squash) slender_raspi_1(ro,sync,no_root_squash)`
+> * Wildcard example entry : `/home/huhu *.example.com(ro,sync)` this allows all computers to access the share which end with `.example.com` this happens due to regex expression
+> * To share with everyone, use `*` in `CIDR_HOSTNAME_IP_DOMAINNAME` instead of IP or CIDR or domain or hostname
 
-* We can create this mount come alive automatically every time the computer boots up by editing the `/etc/fstab`
-* The syntax for this would be `HOSTNAME_IP_DOMAINNAME:/PATH_TO_REMOTE_DIRECTORY MOUNT_POINT nfs defaults 0 0`
+> * We can create this mount come alive automatically every time the computer boots up by editing the `/etc/fstab`
+> * The syntax for this would be `HOSTNAME_IP_DOMAINNAME:/PATH_TO_REMOTE_DIRECTORY MOUNT_POINT nfs defaults 0 0`
 
 ## NETWORK BLOCK DEVICES
 * This is used to access a block device that is connected to a different system on the same network
@@ -556,30 +557,33 @@ net.ipv6.conf.all.forwarding=1
 | `nbd-client NBD_SERVER_IP_HOSTNAME -N EXPORT_IDENTIFIER` | Connect to NBD server and access the devices using `EXPORT_IDENTIFIER` |
 | `nbd-client -d /dev/nbdN` | Disconnect from a NBD device |
 
-### SHARING DEVICES
-* To share the devices, we need to change the configuration file `/etc/nbd-server/config`
-* We need to change the user and group to get nbd to get read and write permissions, but the same effect can be achieved by removing the lines that defines the user and group
-* Next we have ato add a line with same indentation as `allowlist = true` which allows NBD clients to list what the server or exports has available
-* Now to define what devices can be exported we need to add the following at the end of the script
-```
-[EXPORT_IDENTIFIER]
-    exportname=/dev/PARTITION_NAME
-```
-* Example
-```
-[HUHU]
-    exportname=/dev/PARTITION_NAME
-```
+> [!TIP]
+> ### SHARING DEVICES
+> * To share the devices, we need to change the configuration file `/etc/nbd-server/config`
+> * We need to change the user and group to get nbd to get read and write permissions, but the same effect can be achieved by removing the lines that defines the user and group
+> * Next we have ato add a line with same indentation as `allowlist = true` which allows NBD clients to list what the server or exports has available
+> * Now to define what devices can be exported we need to add the following at the end of the script
+> 
+> ```
+> [EXPORT_IDENTIFIER]
+>     exportname=/dev/PARTITION_NAME
+> ```
+> * Example
+> ```
+> [HUHU]
+>     exportname=/dev/PARTITION_NAME
+> ```
+> 
+> * After changing the file `/etc/nbd-server/config` we need to restart the NBD server
 
-* After changing the file `/etc/nbd-server/config` we need to restart the NBD server
-
-### CONFIGURE and USE CLIENT
-* Install NBD client
-* Load kernel module for NBD
-* The load can be automated by adding an entry in `/etc/modules-load.d/modules.conf`, goto end of file and enter the following text `nbd`
-* Connect To NBD server using the `EXPORT_IDENTIFIER`
-* This gives debug message telling that `/dev/nbdN` device is connected, now we can use this device
-* After completion task, disconnect the device
+> [!TIP]
+> ### CONFIGURE and USE CLIENT
+> * Install NBD client
+> * Load kernel module for NBD
+> * The load can be automated by adding an entry in `/etc/modules-load.d/modules.conf`, goto end of file and enter the following text `nbd`
+> * Connect To NBD server using the `EXPORT_IDENTIFIER`
+> * This gives debug message telling that `/dev/nbdN` device is connected, now we can use this device
+> * After completion task, disconnect the device
 
 ## LVM SETUP and MANAGEMENT
 * LVM is the technology that allows to create one partition logically using 2 or more free space partitions on the same disk by joining them logically and representing them as one.
@@ -609,28 +613,33 @@ net.ipv6.conf.all.forwarding=1
     - Volume group
     - Physical Extent
 
-### HOW TO CREATE and USE
-* See available disks and partitions using `lvmdiskscan`
-* Create logical volumes
-* Create a volume group with multiple logical volumes and then these will work as they were a single unit
+> [!TIP]
+> ### HOW TO CREATE and USE
+> * See available disks and partitions using `lvmdiskscan`
+> * Create logical volumes
+> * Create a volume group with multiple logical volumes and then these will work as they were a single unit
 
-### EXTEND A VOLUME GROUP
-* Create a new logical volume
-* Extend the volume group
+> [!TIP]
+> ### EXTEND A VOLUME GROUP
+> * Create a new logical volume
+> * Extend the volume group
 
-### CREATE A PARTITION IN VOLUME GROUP
-* The volume group need to have partitions called physical volume
-* Create then using the `lvcreate` command
-* Extend the partition without caring about breaks in continuity in the physical disk
-* Resize the partition if needed
+> [!TIP]
+> ### CREATE A PARTITION IN VOLUME GROUP
+> * The volume group need to have partitions called physical volume
+> * Create then using the `lvcreate` command
+> * Extend the partition without caring about breaks in continuity in the physical disk
+> * Resize the partition if needed
 
-### FORMATTING A VOLUME
-* By default all these volumes are just spaces, but they are not useful until we create a filesystem on them
-* Create the filesystem using `mkfs.ext4` like commands
-
-#### RESIZE LOGICAL VOLUME WITH FILESYSTEM
-* When we normally run the `lvresize` command on the it extends the volume but the filesystem does remaint the same as before as it was not notified
-* So solve this issue, we pass the `--resizefs` argument
+> [!TIP]
+> ### FORMATTING A VOLUME
+> * By default all these volumes are just spaces, but they are not useful until we create a filesystem on them
+> * Create the filesystem using `mkfs.ext4` like commands
+>
+> > [!TIP]
+> > #### RESIZE LOGICAL VOLUME WITH FILESYSTEM
+> > * When we normally run the `lvresize` command on the it extends the volume but the filesystem does remaint the same as before as it was not notified
+> > * So solve this issue, we pass the `--resizefs` argument
 
 ## STORAGE MONITORING
 
