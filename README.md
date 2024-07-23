@@ -376,6 +376,7 @@ net.ipv6.conf.all.forwarding=1
 * All the changes made by these command are temporary and are lost at next boot up, to make these changes permanent install a package `iptables-persistent` from apt and after adding the rule to chain, run `netfilter-persistent save`
 
 * This stuff can be done using ufw too
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `ufw route allow from INPUT_CIDR to TARGET_MACHINE_IP` | Allow port forwarding |
@@ -390,7 +391,6 @@ net.ipv6.conf.all.forwarding=1
 | `timedatectl` | Get timezone and system time info and see if any NTP server is active |
 | `apt install systemd-timesyncd && timedatectl set-ntp true` | If no active NTP servers found, we turn on synchronization with NTP servers |
 | `systemctl status systemd-timesyncd.service` | See if NTP service is actine or not |
-
 
 ## MANAGE PHYSICAL STORAGE PARTITIONS
 * Bulk devices are the devices from which we can read and write to some data
