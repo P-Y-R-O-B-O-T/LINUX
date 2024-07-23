@@ -1,16 +1,15 @@
 > [!TIP]
 > ### READ SYSTEM DOCS
-> 
+> * Many tools and file have docs at  `/usr/share/doc`
+> * `appropos ROUGH_COMMAND`, to search for a command, but before running this initialize a database using `sudo mandb`
+>
 > | HELP COMMANDS |
 > | ------------- |
 > | `COMMAND --help` |
 > | `man COMMAND` |
 > | `man man` |
-
-* Many tools and file have docs at  `/usr/share/doc`
-* `appropos ROUGH_COMMAND`, to search for a command, but before running this initialize a database using `sudo mandb`
-
-
+> [!note] Huhu
+> * hu
 
 ## LOG INTO LOCAL and REMOTE CONSOLES
 * **Vertual Terminal:** A built-in feature of the Linux operating system that allows users to access multiple windows terminal sessions from a single physical console, press `ctrl+alt+F2`
@@ -220,9 +219,10 @@
 | `printenv` | List environment parameters |
 | `echo $ENV_VARIABLE` | Print environment variable value |
 
-## MANAGE TEMPLATE USER ENVIRONMENT
-* When a user is created, all items from `/etc/skel/` are copied to new user's home directory
-* We put all the files in there and they will be copied
+> [!TIP]
+> ## MANAGE TEMPLATE USER ENVIRONMENT
+> * When a user is created, all items from `/etc/skel/` are copied to new user's home directory
+> * We put all the files in there and they will be copied
 
 ## USER RESOURCE LIMITS
 * To do this we can edit `/etc/security/limits.conf`
