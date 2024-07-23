@@ -31,14 +31,15 @@
 | `sudo shutdown -r +15` | Reboot after 15 mins |
 | `sudo shutdown -r +10 'Rebooting system wall message'` | Reboot and notify logged in users what is about to happen |
 
-## BOOT SYSTEM IN DIFFERENT MODES
-* When we boot into the system, we boot into the `default.target`
-* We can see the default target using `systemctl get-default`
-* `graphical.target` is for booting into GUI mode, `multi-user.target` is for booting into the linux shell target (the black box screen)
-* We can change the default target using `systemctl set-default multi-user.target`
-* Switch back to graphical target from the `multi-user.target` `systemctl isolate graphical.target`, this is not permanant, it is only for the current session
-* `emargency.target` is for debugging the boot process and other problems that are caused by different systems, this also marks the root fs as read-only
-* `rescue.target` only essential services are loaded and we are logged into root shell
+> [!TIP]
+> ### BOOT SYSTEM IN DIFFERENT MODES
+> * When we boot into the system, we boot into the `default.target`
+> * We can see the default target using `systemctl get-default`
+> * `graphical.target` is for booting into GUI mode, `multi-user.target` is for booting into the linux shell target (the black box screen)
+> * We can change the default target using `systemctl set-default multi-user.target`
+> * Switch back to graphical target from the `multi-user.target` `systemctl isolate graphical.target`, this is not permanant, it is only for the current session
+> * `emargency.target` is for debugging the boot process and other problems that are caused by different systems, this also marks the root fs as read-only
+> * `rescue.target` only essential services are loaded and we are logged into root shell
 
 ## SHELL AUTOMATION
 | COMMAND | EFFECT |
