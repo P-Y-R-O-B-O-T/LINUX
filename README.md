@@ -170,7 +170,7 @@
 
 * We can also edit the existing file `/etc/sysctl.conf`
 
-> [!]
+> [!NOTE] HUHU
 > ### MAKE PERSISTENT CHANGE
 > * Make a file `touch /etc/sysctl.d/FILE_NAME.conf`, we can give any name
 > * Add the line `vm.swappiness=20` and then save, this makes the vm less swappy
