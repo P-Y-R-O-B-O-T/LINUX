@@ -258,16 +258,21 @@
 | `sudo passwd root` | Change or create a password for root |
 | `passwd --lock root` | Everyone using root is insecure, so we lock the password based logins |
 
+
 ## CONFIGURE IPv4 and IPv6 NETWORKING and HOSTNAME RESOLUTION
 * IPv6 and IPv4 both have a CIDR notation
 * IPv6 addresses can be written in short by removing leading zeroes (`2001:0db8:0000:0000:0000:ff00:0042:8378` \-> `2001:db8::ff0042:8378`)
 * The `ip` command can help us get all important info about our network configuration
 * A network interface can have multiple IPs, sometimes they need to be removed or added
-#### CHANGE SYSTEMWIDE DNS
-* To apply nameserver setting to all network interfaces, edit `/etc/systemd/resolved.conf` and add the following `DNS=IP_ADDRESSES`, `IP_ADDRESSES` are the IP addresses seperated by spaces and then restart the systemd resolver daemon by running `systemctl restart systemd-resolver.service`
-#### REFER INTERNAL HOSTS BY NAME
-* Sometimes we have a internal server for some purposes, we cant remember all the IP addresses, so we add he names of servers in the file `/etc/hosts`
-* We make an entry in the format `IP NAME` 
+
+> [!TIP]
+> ### CHANGE SYSTEMWIDE DNS
+> * To apply nameserver setting to all network interfaces, edit `/etc/systemd/resolved.conf` and add the following `DNS=IP_ADDRESSES`, `IP_ADDRESSES` are the IP addresses seperated by spaces and then restart the systemd resolver daemon by running `systemctl restart systemd-resolver.service`
+
+> [!TIP]
+> ### REFER INTERNAL HOSTS BY NAME
+> * Sometimes we have a internal server for some purposes, we cant remember all the IP addresses, so we add he names of servers in the file `/etc/hosts`
+> * We make an entry in the format `IP NAME` 
 
 | COMMAND | EFFECT |
 | ------- | ------ |
@@ -410,44 +415,52 @@ net.ipv6.conf.all.forwarding=1
 | `swapon /dev/PARTITION_NAME` | Tell os to use the partition or file as swap after running `mkswap /dev/PARTITION_NAME` |
 | `swapoff /dev/PARTITION_NAME` | Tell os to stop using the partion or file as swap |
 | `dd if=/dev/zero of=SWAP_FILE_PATH bs=1M count=128 status=progress && chmod 600 SWAP_FILE_PATH && mkswap SWAP_FILE_PATH && swapon --verbose SWAP_FILE_PATH` | Create a file based swap, file should not to exist before running these commands, as we are creating the file first |
+im
+> [!IMPORTANT]
+> ### CREATING PARTITIONS
+> * Launch `cfdisk /dev/DEVICE_NAME`
+> * Select GPT
+> * Select a Free Space and select `new`
+> * Enter size and then Hit `Enter`
+> * Similarly again select Free space and then create new partition
+> * Select `write` option to write the changes to the device
 
-### PARTIONING A DISK
-#### CREATING PARTITIONS
-* Launch `cfdisk /dev/DEVICE_NAME`
-* Select GPT
-* Select a Free Space and select `new`
-* Enter size and then Hit `Enter`
-* Similarly again select Free space and then create new partition
-* Select `write` option to write the changes to the device
-#### RESIZE PARTITIONS
-* If we want to resize a partition, goto that partition select `resize` and hit `Enter`
-* Then enter the new size and hit `Enter`
-* Partitions are ordered in order of creation, not based on the physical location
-* To solve the issue, goto the `sort` option an hit `Enter`
-* Select `write` option to write the changes to the device
-#### CREATE SWAP
-* Select the partition and then select `type` option
-* Select `linux swap` and hit `Enter`
-* Select `write` option to write the changes to the device
-#### CREATE BOOT PARTITION
-* Select partition and then select `type` option
-* Select `EFI partition` and then hit `Enter`
-* Select `write` option to write the changes to the device
-* Select `write` option to write the changes to the device
+> [!IMPORTANT]
+> ### RESIZE PARTITIONS
+> * If we want to resize a partition, goto that partition select `resize` and hit `Enter`
+> * Then enter the new size and hit `Enter`
+> * Partitions are ordered in order of creation, not based on the physical location
+> * To solve the issue, goto the `sort` option an hit `Enter`
+> * Select `write` option to write the changes to the device
 
-### CREATE and MANAGE SWAP USING DEVICES
-* Create a swap partition using the `cfdisk` tool on a device 
-* Create a swap using `mkswap --verbose /dev/PARTITION_NAME`
+> [!IMPORTANT]
+> ### CREATE SWAP
+> * Select the partition and then select `type` option
+> * Select `linux swap` and hit `Enter`
+> * Select `write` option to write the changes to the device
 
-### CREATE SWAP FROM FILES
-* `dd if=/dev/zero of=/swap bs=1M count=1024 status=progress`
-* `dd` is a command to write things or bombard things
-* `/dev/zero` is a file that can generate infinite number of zeroes when an application reads it
-* `bs` defines the base size of file unit
-* `count` defines how many bs units define the swap file (totalsize=bs*count)
-* `of` is for output file and we are writing to `/swap`, it colud be any other name
-* Memory content will be written by linux to it, so we should restrict access to ensure salefy by `chmod 600 /swap`
-* Then we declare it as swap `mkswap /swap`
+> [!IMPORTANT]
+> ### CREATE BOOT PARTITION
+> * Select partition and then select `type` option
+> * Select `EFI partition` and then hit `Enter`
+> * Select `write` option to write the changes to the device
+> * Select `write` option to write the changes to the device
+
+> [!TIP]
+> ### CREATE and MANAGE SWAP USING DEVICES
+> * Create a swap partition using the `cfdisk` tool on a device 
+> * Create a swap using `mkswap --verbose /dev/PARTITION_NAME`
+
+> [!TIP]
+> ### CREATE SWAP FROM FILES
+> * `dd if=/dev/zero of=/swap bs=1M count=1024 status=progress`
+> * `dd` is a command to write things or bombard things
+> * `/dev/zero` is a file that can generate infinite number of zeroes when an application reads it
+> * `bs` defines the base size of file unit
+> * `count` defines how many bs units define the swap file (totalsize=bs*count)
+> * `of` is for output file and we are writing to `/swap`, it colud be any other name
+> * Memory content will be written by linux to it, so we should restrict access to ensure salefy by `chmod 600 /swap`
+> * Then we declare it as swap `mkswap /swap`
 
 ## CREATE and CONFIGURE FILE SYSTEM
 
