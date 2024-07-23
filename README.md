@@ -499,7 +499,6 @@ net.ipv6.conf.all.forwarding=1
 * Sometimes a computer have multiple ssd or hdd slots and changing the disks from one to other slots can lead to bad results, so we use UUID of a bulk device instead of `sdx`, because `sdx` is relative to ports and slots in motherboard and the time sequence of connecting the devices and we can see entrien in `/etc/fstab` whick look like `/dev/disk/by-uuid/75a33bb5-cbb7-4b02-bccf-1fb5cad46ea5 /boot ext4 defaults 0 1` which follows the format `/dev/disk/by-uuid/UUID MOUNT_POINT FILESYSTEM MOUNT_OPTIONS DUMP_VALUE CORRUPTION_ERROR_HANDLE`
 * To get UUID of a bulk device `blkid /dev/PARTITION_NAME` or we can see 
 
-
 ### MOUNT OPTIONS 
 
 | COMMAND | EFFECT |
@@ -607,11 +606,12 @@ net.ipv6.conf.all.forwarding=1
 | `lvresize --resizefs --size NG GROUP_NAME/PARTITION_NAME` | Extend the fs along with logical volume |
 | `lvremove GROUP_NAME/PARTITION_NAME` | Remove/delete a logical partition |
 
-* There are 4 units in LVM:
-    - Physical volume
-    - Logical volume
-    - Volume group
-    - Physical Extent
+> [!IMPORTANT]
+> * There are 4 units in LVM:
+>     - Physical volume
+>     - Logical volume
+>     - Volume group
+>     - Physical Extent
 
 > [!TIP]
 > ### HOW TO CREATE and USE
@@ -637,7 +637,7 @@ net.ipv6.conf.all.forwarding=1
 > * Create the filesystem using `mkfs.ext4` like commands
 
 > [!TIP]
-> #### RESIZE LOGICAL VOLUME WITH FILESYSTEM
+> ### RESIZE LOGICAL VOLUME WITH FILESYSTEM
 > * When we normally run the `lvresize` command on the it extends the volume but the filesystem does remaint the same as before as it was not notified
 > * So solve this issue, we pass the `--resizefs` argument
 
