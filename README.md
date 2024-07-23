@@ -6,24 +6,30 @@
 * To ssh into a system, run `ssh USER@IP_HOST_NAME -p PORT`
 
 ## READ SYSTEM DOCS
-* `COMMAND --help`
-* `man COMMAND`
-* Many tools and files have doc at `/usr/share/doc/`
-* `man man`
-* `man 1 printf`
+
+| HELP COMMANDS |
+| ------------- |
+| `COMMAND --help` |
+| `man COMMAND` |
+| `man man` |
+
+* Many tools and file have docs at  `/usr/share/doc`
 * `appropos ROUGH_COMMAND`, to search for a command, but before running this initialize a database using `sudo mandb`
 
 ## SAFELY BOOT REBOOT
-* `sudo systemctl reboot`
-* `sudo systemctl poweroff`
-* `sudo systemctl reboot --force` forcefully reboot
-* `sudo systemctl poweroff --force` forcefully poweroff
-* `sudo systemctl reboot --force --force` very insecure, its like pulling power cable from computer
-* `sudo systemctl poweroff --force --force` very insecure, its like pulling power cable from computer
-* `sudo shutdown 18:15` power off at 18:15
-* `sudo shutdown +15` power off in 15 mins
-* `sudo shutdown -r +15` reboot after 15 mins
-* `sudo shutdown -r +10 'Rebooting system wall message'` notify logged in users what is about to happen
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `sudo systemctl reboot` | Safe reboot |
+| `sudo systemctl poweroff` | Safe poweroff |
+| `sudo systemctl reboot --force` | Forcefully reboot |
+| `sudo systemctl poweroff --force` | Forcefully poweroff |
+| `sudo systemctl reboot --force --force` | Very insecure, its like pulling power cable from computer
+| `sudo systemctl poweroff --force --force` | Very insecure, its like pulling power cable from computer
+| `sudo shutdown 18:15` | Power off at 18:15 |
+| `sudo shutdown +15` | Power off in 15 mins |
+| `sudo shutdown -r +15` | Reboot after 15 mins |
+| `sudo shutdown -r +10 'Rebooting system wall message'` | Reboot and notify logged in users what is about to happen |
 
 ## BOOT SYSTEM IN DIFFERENT MODES
 * When we boot into the system, we boot into the `default.target`
@@ -35,77 +41,87 @@
 * `rescue.target` only essential services are loaded and we are logged into root shell
 
 ## SHELL AUTOMATION
-* `chmod +x FILE` make executable for everyone
-* `chmod u+x FILE` make executable for current user
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `chmod +x FILE` | Make executable for everyone |
+| `chmod u+x FILE` | Mmake executable for current user |
 
 ## MANAGE STARTUP PROCESSES
 * Processe are started by a init system
 * Systemd is a collection of tools that helps start, operate and manage services and processes, it is also a init system
-* `systemctl cat SYSTEMD_FILE` to see the systemd file content
-* `systemctl edit --full SYSTEMD_FILE` to edit the systemd file
-* `systemctl revert SYSTEMD_FILE` to revert the changes to the file to factory settings
-* `systemctl status SERVICE_NAME` to see status of service
-* `systemctl stop SERVICE_NAME` to stop a service
-* `systemctl start SERVICE_NAME` to start a service
-* `systemctl restart SERVICE_NAME` to sestart a service but this can abrupt the current process that may be associated with other processes and users
-* `systemctl reload SERVICE_NAME` reload service without interrupting the processes and in-memory data
-* `systemctl disable SERVICE_NAME` to disable the service
-* `systemctl enable SERVICE_NAME` to enable the service
-* `systemctl enable --now SERVICE_NAME` enable and start the service
-* `systemctl disbale --now SERVICE_NAME` disable and stop the service
-* `systemctl mask SERVICE_NAME` sometimes a service starts automatically and starts other serivices too, to stop this thing we need to mask the service
-* `systemctl unmask SERVICE_NAME` to unmask the masked service
-* `systemctl list-units --type UNIT_TYPE --all` to list all serices of a type, there are many types of services: `service`, `socket` etc
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `systemctl cat SYSTEMD_FILE` | See the systemd file content |
+| `systemctl edit --full SYSTEMD_FILE` | Edit the systemd file |
+| `systemctl revert SYSTEMD_FILE` | Revert the changes to the file to factory settings |
+| `systemctl status SERVICE_NAME` | See status of service |
+| `systemctl stop SERVICE_NAME` | Stop a service |
+| `systemctl start SERVICE_NAME` | Start a service |
+| `systemctl restart SERVICE_NAME` | Restart a service but this can abrupt the current process that may be associated with other processes and users |
+| `systemctl reload SERVICE_NAME` | Reload service without interrupting the processes and in-memory data
+| `systemctl disable SERVICE_NAME` | Disable the service
+| `systemctl enable SERVICE_NAME` | Enable the service
+| `systemctl enable --now SERVICE_NAME` | Enable and start the service
+| `systemctl disbale --now SERVICE_NAME` | Disable and stop the service
+| `systemctl mask SERVICE_NAME` | Sometimes a service starts automatically and starts other serivices too, to stop this thing we need to mask the service
+| `systemctl unmask SERVICE_NAME` | Unmask the masked service
+| `systemctl list-units --type UNIT_TYPE --all` | List all serices of a type, there are many types of services: `service`, `socket` etc
 
 ## SYSTEMD SERVICES
-* `man systemd.<TAB><TAB>` to get to know about service units
-* See pre existing systemd files at `/lib/systemd/system`
-* `journalctl -f` to see live logs generated by systemd services
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `man systemd.<TAB><TAB>` | Get to know about service units |
+| `journalctl -f` | See live logs generated by systemd services |
+
+* See existing systemd files at `/lib/systemd/system`
 
 ## DIAGNOSE and MANAGE PROCESSES
-* `man ps /EXAMPLES` see most used `ps` examples
-* `ps` list processes running in current terminal session
-* `ps -aux` list all processes
-* Processes shown in bracket area are privilaged processes running in kernel mode
-* `ps u PID` see process data in user oriented format (see process cpu and mem utilisation)
-* `ps u -U USER_NAME` see processes launched by current user in user oriented format
-* `pgrep -a MATCH_STRING` search process by name or match_string
-* there are enice values thich can define process priority [-20, 19], more the value, less the cpu it consumes
-* `nice -n NICE_VALUE COMMAND` run a process with a nice value
-* `ps l` see processes with nice values
-* `ps fax` see all processes with child parent relationship
-* `renice NEW_NICE_VALUE PID` change nice value
-* `kill -L` get list of signals for processes
-* `kill -SIGNAL PID` send a signal to the process
-* `pkill -SIGNAL PROCESS_NAME` send signal to all processes matching the name
-* `COMMAND &` run process in background
-* `fg PROCESS_HINT` bring back the process in foreground
-* `lsof -p PID` see all files and directories being used by a process
-* `lsof FILE_DIRECTORY_PATH` see if any process is using the file or directory
+| `man ps /EXAMPLES` | See most used `ps` examples |
+| `ps` | List processes running in current terminal session |
+| `ps -aux` | List all processes, processes shown in bracket area are privilaged processes running in kernel mode |
+| `ps u PID` | See process data in user oriented format (see process cpu and mem utilisation) |
+| `ps u -U USER_NAME` | See processes launched by current user in user oriented format |
+| `pgrep -a MATCH_STRING` | Search process by name or match_string |
+| `nice -n NICE_VALUE COMMAND` | Run a process with a nice value, there are enice values thich can define process priority [-20, 19], more the value, less the cpu it consumes |
+| `ps l` | See processes with nice values |
+| `ps fax` | See all processes with child parent relationship |
+| `renice NEW_NICE_VALUE PID` | Change nice value |
+| `kill -L` | Get list of signals for processes |
+| `kill -SIGNAL PID` | Send a signal to the process |
+| `pkill -SIGNAL PROCESS_NAME` | Send signal to all processes matching the name |
+| `COMMAND &` | Run process in background |
+| `fg PROCESS_HINT` | Bring back the process in foreground |
+| `lsof -p PID` | See all files and directories being used by a process |
+| `lsof FILE_DIRECTORY_PATH` | See if any process is using the file or directory |
 
 ## LOG FILES
-* `rsyslog` saves all the logs in `/var/log/`
-* `grep -r ssh /var/log/` get file that strores ssh logs
+* `rsyslog` service saves all the logs in `/var/log/`
 * Main files that are frequently used are `/var/log/syslog` and `/var/log/auth.log`
-* `tail -F LOGFILE` see live logs
-* `journalctl COMMAND_SYSTEMD_UNIT` see logs generated by the command or systemd unit
-* `journalctl -f` see live logs
-* `journalctl -p PRIORITY`, see logs filtered by priority, priorities are: `info`, `warning`, `err` and `crit`
-* `journalctl -p PRIORITY -g 'REGEX'` see regex matching logs with selected priority
-* `journalctl -S START_TIME -U END_TIME` see logs in between time period, time format is `HH:MM`
-* `journalctl -b 0` get loge for current boot
-* `journalctl -b -N` see logs for previous boots
-* `last` see login activity
-* `lastlog` see who logged last
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `grep -r ssh /var/log/` | Get file that strores ssh logs |
+| `tail -F LOGFILE` | See live logs |
+| `journalctl COMMAND_SYSTEMD_UNIT` | See logs generated by the command or systemd unit |
+| `journalctl -f` | See live logs |
+| `journalctl -p PRIORITY` | See logs filtered by priority, priorities are: `info`, `warning`, `err` and `crit` |
+| `journalctl -p PRIORITY -g 'REGEX'` | See regex matching logs with selected priority |
+| `journalctl -S START_TIME -U END_TIME` | See logs in between time period, time format is `HH:MM` |
+| `journalctl -b 0` | Get loge for current boot |
+| `journalctl -b -N` | See logs for previous boots |
+| `last` | See login activity |
+| `lastlog` | See who logged last |
 
 ## SCHEDULING TASKS
 * We can schedule tasks using cron, anacron and at
 * Anacron runs the task even if the computer was off at the time of execution but cron won't
 * `cat /etc/crontab` to see the cronjob format
 * For each star if we want to run in ranges or multiple values of theat field, we can use:
-    - , to match multiple values without having space inbetween the value and comma (like 2,5)
-    - \- for specifying the ranges (like 2-4)
-    - / can be used to specify the step values (skip values) (like /4)
+    - `,` to match multiple values without having space inbetween the value and comma (like 2,5)
+    - `-` for specifying the ranges (like 2-4)
+    - `/` can be used to specify the step values (skip values) (like /4)
 * Always use full command path
 * Cronjobs are user specific
 * `sudo cronjob -e -u USERNAME` edit other user's cronjobs
@@ -113,35 +129,47 @@
 
 | COMMAND | EFFECT |
 | ------- | ------ |
-| `at '15:35'` | run a tast at a praticular time |
-| `at '12:34 August 20 2024'` | run task at specific date and time |
-| `at 'now + 30  minutes'` | run 30 minutes later |
+| `at '15:35'` | Run a task at a praticular time |
+| `at '12:34 August 20 2024'` | Run task at specific date and time |
+| `at 'now + 30  minutes'` | Run 30 minutes later |
 
 ## PACKAGE MANAGEMENT
 * Specifically for apt package manger
-* `apt search --name PACKKAGE_NAME` to search package in module names and their descriptions
-* `apt search --names-only PACKKAGE_NAME` to search only in module names
-* `apt install PACKKAGE_NAME` to install a package
-* `apt remove PACKKAGE_NAME` to remove package, but do not remove dependencies
-* `apt autoremove PACKKAGE_NAME` to remove the dependencies along with the main package
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `apt search --name PACKKAGE_NAME` | Search package in module names and their descriptions |
+| `apt search --names-only PACKKAGE_NAME` | Search only in module names |
+| `apt install PACKKAGE_NAME` | Install a package |
+| `apt remove PACKKAGE_NAME` | Remove package, but do not remove dependencies |
+| `apt autoremove PACKKAGE_NAME` | Remove the dependencies along with the main package |
+
 * The file `/etc/apt/sources.list.d/ubuntu.sources` stores all the repositories that apt is supposed to search and use
 
 ## VERIFY AVAILABILITY OF RESOURCES
-* `df` see the disk free space
-* `df -h` see the disk space in human readable format
-* `du -sh PATH` see the space being used by a directory
-* `free -h` see available ram and swap
-* `uptime` see system isge throughout the boot time
-* `fsck.ext4 -v -f -p PATH_TO_DISK_DEVICE` repair disk with verbose, force and pre options
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `df` | See the disk free space |
+| `df -h` | See the disk space in human readable format |
+| `du -sh PATH` | See the space being used by a directory |
+| `free -h` | See available ram and swap |
+| `uptime` | See system isge throughout the boot time |
+| `fsck.ext4 -v -f -p PATH_TO_DISK_DEVICE` | Repair disk with verbose, force and pre options |
 
 ## CHANGE KERNEL RUNTIME PARAMETERS (PERSISTENT and NON PERSISTENT)
-* `sysctl -a` read some parameter values
-* `sysctl -w PARAMETER=VALUE` write values to a parameter, non presistent change
-* `man sysctl.d` get help on system parameter configuration files
-* We can also edit the pre existing file `/etc/sysctl.conf`
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `sysctl -a` | Read some parameter values |
+| `sysctl -w PARAMETER=VALUE` | Write values to a parameter, non presistent change |
+| `man sysctl.d` | Get help on system parameter configuration files |
+
+* We can also edit the existing file `/etc/sysctl.conf`
+
 ### MAKE PERSISTENT CHANGE
 * Make a file `touch /etc/sysctl.d/FILE_NAME.conf`, we can give any name
-* Add the line `vm.swappiness=20` and then save, this makes the vm lss swappy
+* Add the line `vm.swappiness=20` and then save, this makes the vm less swappy
 * This will persist even after reboot
 * These changes normally apply after reboot, to get into action quickly run `sysctl -p /etc/sysctl.d/FILE_NAME.conf`
 
