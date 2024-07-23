@@ -103,6 +103,21 @@
 | `lsof -p PID` | See all files and directories being used by a process |
 | `lsof FILE_DIRECTORY_PATH` | See if any process is using the file or directory |
 
+> [!TIP]
+> ### SCHEDULING TASKS
+> * We can schedule tasks using cron, anacron and at
+> * Anacron runs the task even if the computer was off at the time of execution but cron won't
+> * `cat /etc/crontab` to see the cronjob format
+> * For each star if we want to run in ranges or multiple values of theat field, we can use:
+>     - `,` to match multiple values without having space inbetween the value and comma (like 2,5)
+>     - `-` for specifying the ranges (like 2-4)
+>     - `/` can be used to specify the step values (skip values) (like /4)
+> * Always use full command path
+> * Cronjobs are user specific
+> * `sudo cronjob -e -u USERNAME` edit other user's cronjobs
+> * `at` command is used to run a task once
+
+
 ## LOG FILES
 * `rsyslog` service saves all the logs in `/var/log/`
 * Main files that are frequently used are `/var/log/syslog` and `/var/log/auth.log`
@@ -120,25 +135,6 @@
 | `journalctl -b -N` | See logs for previous boots |
 | `last` | See login activity |
 | `lastlog` | See who logged last |
-
-## SCHEDULING TASKS
-* We can schedule tasks using cron, anacron and at
-* Anacron runs the task even if the computer was off at the time of execution but cron won't
-* `cat /etc/crontab` to see the cronjob format
-* For each star if we want to run in ranges or multiple values of theat field, we can use:
-    - `,` to match multiple values without having space inbetween the value and comma (like 2,5)
-    - `-` for specifying the ranges (like 2-4)
-    - `/` can be used to specify the step values (skip values) (like /4)
-* Always use full command path
-* Cronjobs are user specific
-* `sudo cronjob -e -u USERNAME` edit other user's cronjobs
-* `at` command is used to run a task once
-
-| COMMAND | EFFECT |
-| ------- | ------ |
-| `at '15:35'` | Run a task at a praticular time |
-| `at '12:34 August 20 2024'` | Run task at specific date and time |
-| `at 'now + 30  minutes'` | Run 30 minutes later |
 
 ## PACKAGE MANAGEMENT
 * Specifically for apt package manger
