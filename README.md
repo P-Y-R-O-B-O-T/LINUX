@@ -8,7 +8,7 @@
 > | `COMMAND --help` |
 > | `man COMMAND` |
 > | `man man` |
->> [!note] Huhu
+>> [!NOTE]
 >> * hu
 
 ## LOG INTO LOCAL and REMOTE CONSOLES
