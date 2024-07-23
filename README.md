@@ -1,4 +1,3 @@
-# LINUX
 ## LOG INTO LOCAL AND REMOTE CONSOLES
 * **Vertual Terminal:** A built-in feature of the Linux operating system that allows users to access multiple windows terminal sessions from a single physical console, press `ctrl+alt+F2`
 * **Console:** A system console is the device which receives all kernel messages and warnings and which allows logins in single user mode
