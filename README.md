@@ -8,10 +8,6 @@
 > | `COMMAND --help` |
 > | `man COMMAND` |
 > | `man man` |
-> > [!NOTE]
-> > * huhu
-> > > [!NOTE]
-> > > * Description
 
 ## LOG INTO LOCAL and REMOTE CONSOLES
 * **Vertual Terminal:** A built-in feature of the Linux operating system that allows users to access multiple windows terminal sessions from a single physical console, press `ctrl+alt+F2`
