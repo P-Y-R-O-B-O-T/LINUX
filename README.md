@@ -18,7 +18,7 @@
 * `sudo systemctl reboot`
 * `sudo systemctl poweroff`
 * `sudo systemctl reboot --force` forcefully reboot
-* `sudo systemctl poweroff --force` forcefullt poweroff
+* `sudo systemctl poweroff --force` forcefully poweroff
 * `sudo systemctl reboot --force --force` very insecure, its like pulling power cable from computer
 * `sudo systemctl poweroff --force --force` very insecure, its like pulling power cable from computer
 * `sudo shutdown 18:15` power off at 18:15
