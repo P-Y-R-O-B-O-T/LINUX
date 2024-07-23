@@ -111,6 +111,7 @@
 * Cronjobs are user specific
 * `sudo cronjob -e -u USERNAME` edit other user's cronjobs
 * `at` command is used to run a task once
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `at '15:35'` | run a tast at a praticular time |
@@ -146,6 +147,7 @@
 * These changes normally apply after reboot, to get into action quickly run `sysctl -p /etc/sysctl.d/FILE_NAME.conf`
 
 ## CREATE DELETE MODIFY USER and GROUPS
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `adduser USER_NAME` | Creates a user, also creates a new group called USER_NAME |
@@ -181,6 +183,7 @@
 * To save variables in local profile, save them in `/home/usr/.bashrc`
 * To save variables in all profiles, save then in `/etc/environment`
 * To run a task when a user logs in, create a file `/etc/profile.d/FILE_NAME.sh` and add all the commands that are need to be run
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `printenv` | List environment parameters |
@@ -215,6 +218,7 @@
 
 ## MANAGE ACCESS TO ROOT ACCOUNT
 * In some systems, root account is locked for security purposes but this does not mean we can't login with the root
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `sudo --login` | Login into the shell as root user |
@@ -280,6 +284,7 @@ network:
         uuid: "325453d5-9061-49ab-ae2a-1f8f8f9f01bf"
         name: "POCO C65"
 ```
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `netplan get` | Get all info for all network interfaces |
@@ -311,6 +316,7 @@ network:
 * For more help `man netplan`, `man ip`
 
 ## START STOP and MANAGE NETWORK SERVICES
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `ss -ltunp` | Tells which interface and and ports are being used in the system |
@@ -327,6 +333,7 @@ net.ipv6.conf.all.forwarding=1
 * Generally input and output network interfaes and input network interfaces are different but can be same in some cases
 * After editing the file reload all sysctl config files by running `sudo sysctl --system`
 * For adding fine tuned working rules in nat table we need to do both pre routing and post routing things
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `ip r` | See all the routes |
@@ -344,6 +351,7 @@ net.ipv6.conf.all.forwarding=1
 
 ## SYNCHRONIZE SYSTEM TIME
 * Our systems can utilize time servers to get exact time from the internet
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `timedatectl list-timezones` | Get all available timezones |
@@ -359,6 +367,7 @@ net.ipv6.conf.all.forwarding=1
     - Then we have partition reference like `sda1, sda2` which are the physical partions on the disks
     - There is a asying in linux that everything is a file, all these storage device files can be listed in `/dev/` like `/dev/nvme0n1` and many more
     - There are partition tables that knows whare a partition starts and ends, for a decade `Master Boot Record (MBR)` was use but now transitioned to ` Grid Partition Table (GPT)` which supports less corruption of data and provide more versatile partitioning options 
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `lsblk` | List bulk devices |
@@ -410,6 +419,7 @@ net.ipv6.conf.all.forwarding=1
 * Then we declare it as swap `mkswap /swap`
 
 ## CREATE AND CONFIGURE FILE SYSTEM
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `mkfs.ext4 /dev/PARTITION_NAME` | Create a ext4 filesystem in selected partition |
@@ -428,6 +438,7 @@ net.ipv6.conf.all.forwarding=1
 ## MOUNTING FILESYSTEMS
 * To make a filesystem accessable, we must mount it
 * All the filesystem are mounted inside the directory `/mnt/` but not necessarily, `MOUNT_POINT` can be any existing directory
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `mount /dev/PARTITION_NAME MOUNT_POINT` | Mount a filesystem to the mount point path |
@@ -459,6 +470,7 @@ net.ipv6.conf.all.forwarding=1
 
 
 ### MOUNT OPTIONS 
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `mount -o MOUNT_OPTIONS /dev/PARTITION_NAME MOUNT_POINT` | Provide mount options to the mount, `MOUNT_OPTIONS` are in csv with no space |
@@ -472,6 +484,7 @@ net.ipv6.conf.all.forwarding=1
 * We can write the `MOUNT_OPTIONS` in `/etc/fstab` just like we did here
 
 ## REMOTE FILESYSTEMS
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `apt install nfs-kernel-server` | Install NFS server on server |
@@ -479,6 +492,7 @@ net.ipv6.conf.all.forwarding=1
 | `apt install nfs-common` | Install NFS tools on client |
 | `mount HOSTNAME_IP_DOMAINNAME:PATH_TO_REMOTE_DIRECTORY MOUNT_POINT` | Mount a remote directory on a local directory |
 | `umount MOUNT_POINT` | Unmount NFS share |
+
 ### SHARING DIRECTORIES
 * We need to tell the NFS server about the directories that need to be shared
 * We do it by editing `/etc/exports`
@@ -499,6 +513,7 @@ net.ipv6.conf.all.forwarding=1
 
 ## NETWORK BLOCK DEVICES
 * This is used to access a block device that is connected to a different system on the same network
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `apt install nbd-server` | Install NBD server package on server |
@@ -587,6 +602,7 @@ net.ipv6.conf.all.forwarding=1
 * So solve this issue, we pass the `--resizefs` argument
 
 ## STORAGE MONITORING
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `apt install sysstat` | Install sysstat monitoring tool |
@@ -605,6 +621,7 @@ net.ipv6.conf.all.forwarding=1
 ## ADVANCED FILE PERMISSIONS
 * Normally we can define access for owner, group and other users
 * But in some cases we also need to define permissions for multiple users and groups, this is done through ACL (Access Control List)
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `apt install acl` | Install the acl package |
@@ -615,6 +632,7 @@ net.ipv6.conf.all.forwarding=1
 | `setfacl --modify mask:PERMISSIONS FILE_DIRECTORY_PATH` | This defines effective real permissions, even if we provide `w` permission in normal ACL but mask have only `r` the user wont be able to write as mask limits the permissions |
 | `setfacl --remove-all FILE_DIRECTORY_PATH` | Remove all ACL entries for the path |
 | `setfacl --remove-all --recursive DIRECTORY_PATH` | Apply changes to sub-directory items |
+
 * Possible permissions are:
     - `r--`
     - `rw-`
@@ -628,6 +646,7 @@ net.ipv6.conf.all.forwarding=1
 * Attributes define file behaviour
 * `a` is for append only, this makes file so that only content can be added, no changes allowed in already saved data
 * `i` is for immutable, this makes the file frozen, not even a sudo user can change the file i any way (can't delete, modify, rename, etc)
+
 | COMMAND | EFFECT |
 | ------- | ------ |
 | `chattr +ATTRIBUTE FILE_DIRECTORY_PATH` | Add an attribute |
