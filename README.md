@@ -100,6 +100,17 @@
 | `lsof -p PID` | See all files and directories being used by a process |
 | `lsof FILE_DIRECTORY_PATH` | See if any process is using the file or directory |
 
+> [!IMPORTANT]
+> * While using kill command be sure of these basic signals
+>
+> | SIGNAL | EFFECT |
+> | ------ | ------ |
+> | `SIGSTOP` | Stop the process in the same atate and keem in memory |
+> | `SIGCONT` | Resume a stopped process |
+> | `SIGTERM` | Terminate a process and give it time to do the necessary time to cleanup and persist data |
+> | `SIGKILL` | Forcefully kill the process |
+
+
 > [!TIP]
 > ### SCHEDULING TASKS
 > * We can schedule tasks using cron, anacron and at
