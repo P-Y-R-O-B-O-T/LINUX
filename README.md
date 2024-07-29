@@ -814,9 +814,8 @@ im
 
 ## MANAGING VIRTUAL and ISOLATED NETWORKS
 
-* If we consider docker containers and docker host and a wifi/ethernet connection, the docker host and docker container have theri own routing table, arp table and network interfaces
-* 
-
+* If we consider docker containers and docker host and a wifi/ethernet connection, the docker host and docker container have their own routing table, arp table and network interfaces
+* The virtual network is like an interface to the localhost but like a switch to the network namespaces
 * This is what docker does to manage virtual networks
 
 * `ip -n red link del veth-red`, when we delete one end of the cable, other gets deleted as well as they are in a pair
