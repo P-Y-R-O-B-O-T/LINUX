@@ -812,4 +812,80 @@ im
 * We can again connect to the virtual machine after exiting by `virsh console ubuntu1`
 * To autodetect OS info in the `--osinfo` parameter we can pass `detect=on`
 
+## MANAGING VIRTUAL and ISOLATED NETWORKS
 
+* If we consider docker containers and docker host and a wifi/ethernet connection, the docker host and docker container have theri own routing table, arp table and network interfaces
+* 
+
+* This is what docker does to manage virtual networks
+
+* `ip -n red link del veth-red`, when we delete one end of the cable, other gets deleted as well as they are in a pair
+
+> [!TIP]
+> ### VIRTUAL NAMESPACE HANDS ON
+> * Create two network namespaces `ip netns add red && ip netns add blue`
+> * Then list them `ip netns`
+> * On the host we can see the network interfaces using `ip link`, to see network interfaces on the network namespaces `ip netns exec red ip link` and for blue `ip netns exec blue ip link` or use `ip -n NETWORK_NAMESPACE link`
+> * We can note that ew have prevented the nwtwork interface from seeing host interfaces
+> * We run `arp` to see host ARP table, to see it on network namespaces run `ip netns exec red arp` and for blue `ip netns exec blue arp`, we note that ARP table lists some entries but no entries insode the network namespaces
+> * Right now these network devices are totally isolated and do not have connectivity
+> * To connect these networks we need a virtual cable, we create it using `ip link add veth-red type type veth peer name veth-blue`
+> * Now we need to plug in these cables `ip link set veth-red netns red` and `ip link set veth-blue netns blue` to create interfaces in those network namespaces
+> * Only connecting them is not enough, we need to assign IP to them `ip -n red addr add 192.168.15.1 dev veth-red` and `ip -n red addr add 192.168.15.2 dev veth-blue`
+> * Now we need to turn up the links `ip -n red link set veth-red up` and `ip -n blue link set veth-red up`
+> * This is the momment when these two can interact with each other, check using `ip netns exec red ping 192.168.15.2` and `ip netns blue ping 192.168.15.1`
+> * These network namespaces not have their own ARP table entries for each other
+
+> [!TIP]
+> ### VIRTUAL NETWORK HANDS ON
+> * We now want to have a virtual network of multiple namespaces, for this we need a virtual switch and for this we have 2 options `Linux Bridge` and `OpenvSwitch`, we will use the first one
+> * `ip link add v-net-0 type bridge` creates a virtual bridge network, for the host it is just an interface, we can see it using `ip link`
+> * Bring the virtual network up `ip link set dev v-net-0 up`
+> * For the namespaces, this network is like a switch to which they can connect
+> * Create cables for network interfaces `ip link add veth-red type veth peer name veth-red-br` and `ip link add veth-blue type veth peer name veth-blue-br`
+> * Plugin the cable ends one to network namespace and other end to virtual network switch for both the devices
+>     - `ip link set veth-red netns red && ip link set veth-red-br master v-net-0` plugs cables red network namespace
+>     - `ip link set veth-blue netns blue && ip link set veth-blue-br master v-net-0` plugs cables for blue network namespace
+> * Now we need to assign ip addresses to both of the network namespaces
+>     - `ip -n red addr add 192.168.15.1 dev veth-red` set ip for red
+>     - `ip -n blue addr add 192.168.15.2 dev veth-blue` set ip for blue
+> * Now we need to set the interface up on both of them
+    - `ip -n link set veth-red up` for red network namespace
+    - `ip -n link set veth-blue up`
+
+> [!TIP]
+> ### INTERFACING HOST NETWORK AND VIRTUAL NETWORKS
+> * What we have setup above using virtual network switch is unreachable from host network
+> * For that we need to add ip address to the virtual network `ip addr add 192.168.15.5/24 dev v-net-0`
+> * Now we can ping the ip addresses `192.168.15.1` and `192.168.15.2` from the host
+
+> * Note that this whole private network is just accessable and contained within the host, we can't access it using outer computer and they also can't access internet
+> * It is the host which has the network namespaces and route table entry to reach outside machines and internet, and not the private networks and namespaces, we can chech them using
+>     - `ip netns exec blue route`
+>     - `ip netns exec red route`
+> * Suppose out host have IP address `192.168.1.1` and there is another computer on the network with IP `192.168.1.3`
+> * Our localhost also have interfaces to attach to virtual networks and to connect to private actual network, so our localhost is the gateway that connects those virtual nwtworks and the actual private network
+> * We can add an route table entry in namespace to route all the traffic to `192.168.1.1` network through the gateway `192.168.15.5`
+>     - `ip netns exec blue ip route add 192.168.1.0/24 via 192.168.15.5`
+>     - `ip netns exec red ip route add 192.168.1.0.24 via 192.168.15.5`
+> * Now these namespace can reach to the private actual network but the request from outside can't reach these namespaces, which means that we can send requests to external networks and machine but we won't get any responce back
+> * To make this possible we need to enable NAT on the localhost system
+    - `iptables -t nat -A POSTROUTING -s 192.168.15.0/24 -j MASQUERADE`
+> * Now we can reach the outer private network, chech `ip netns exec blue ping 192.168.1.3`
+>
+> * But still we can't reach the internet
+> * We need to see routing table `ip netns exec blue route` and `ip netns exec red route`, we see that we have only entries for the networks `192.168.1.0/24` and `192.168.15.0/24` but we do not have any entry that tells how to route to rest of the ip addedss request and network address requests, we need to add the default gateway
+> * To add the default gateway, we know that all the routing entries for external network is present in localhost so we add entries in all the network namespaces as
+    - `ip netns exec blue ip route add default via 192.168.15.5`
+    - `ip netns exec red ip route add default via 192.168.15.5`
+> * We are routing default requests through `192.168.15.5` because it is the only way to reach the localhost from the network namespaces
+> * Now we can connect to internet, check `ip netns exec blue ping 8.8.8.8` and `ip netns exec red ping 8.8.8.8`
+
+> * Still the ip address `192.168.1.3` the private network IP address cant reach the network namespaces because it does not know if it exists or how to reach it, solution to this can be to tell that host how to reach the network namespaces
+    - `ip route add 192.168.15.0/24 via 192.168.1.1` running this command on `192.168.1.3` will allow it to reach the network namespaces
+> * Or we can add a port forwarding rule to localhost
+    - `iptables -t nat -A PREROUTING --dport 80 --to-destination 192.168.15.2:80 -j DNAT`
+>
+> * Still computers on internet can not access it, to make it do so
+    - Set default gateway for the CIDR of virtual network in your home/institution router and add tell it to route through our localhost
+    - 
