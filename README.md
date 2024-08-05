@@ -16,6 +16,177 @@
 * To get all ip addresses associated with your system, run `ip a`
 * To ssh into a system, run `ssh USER@IP_HOST_NAME -p PORT`
 
+## HARD LINKS
+* All data in linux systems is stored using `Inodes` (these are pointers to data)
+* Suppose one user have some data and wants to share it with another one, what to do ? Copy ? Nah !
+* We create hard links to it, here in case of hard links, the data do not get duplicated but the same `Inode` gets pointed by multiple files, which saves space on disk `ln /home/USER1/FILE /home/USER2/FILE`
+* What if any one user deletes the file ? The file does not get removed because other hard link exist and a file is deleted only if all hardlinks are removed
+
+> [!TIP]
+> While creating hard links between users we first add those users to same user group and then give that group write permissions and we need to change permission of one hard link to read and write
+> * `useradd -a -G GROUP_NAME USER1 && useradd -a -G GROUP_NAME USER2`
+> * `chmod 660 FILE_PATH`
+> * `ln /home/USER1/FILE /home/USER2/FILE`
+
+> [!NOTE]
+> We can only hard link files, not directories
+> We can hard link files only on the same filesystem, we can't hardlink on different filesystems
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `stat FILE` | Get inode data, hardlink data and many more |
+| `ln PATH_TO_TARGET_FILE PATH_TO_LINK_FILE` | Create a hard link |
+
+## SOFT LINKS
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `ln -s PATH_TO_TARGET_FILE PATH_TO_LINK_FILE` | Create soft link or symbolic links |
+| `ln -l` | Long listing format, see l at starting of properties, that means soft links |
+| `readlink` | See target path of a soft link |
+
+## FILE PERMISSIONS
+* We can change file group permission only for the groups the user is in, but this behaviour can be changed using `sudo` to set file ownership to any group, even if the user is not part of that group
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `chgrp GROUP_NAME FILE_DIRECTORY_PATH` | Change group of file or directory |
+| `chown USER FILE_DIRECTORY_PATH` | Change owner of file or directory |
+| `chown USER:GROUP_NAME FILE_DIRECTORY_PATH` | Change user owner and group owner |
+| `chmod ACCESS+PERMISSIONS FILE_DIRECTORY_PATH` | Add permissions, `ACCESS` can be `u`, `g`, `o` and PERMISSIONS can be `r`, `w`, `x`, `rx`, `rw`, `rwx` |
+| `chmod ACCESS-PERMISSIONS FILE_DIRECTORY_PATH` | Remove permissions, `ACCESS` can be `u`, `g`, `o` and PERMISSIONS can be `r`, `w`, `x`, `rx`, `rw`, `rwx` |
+| `chmod ACCESS=PERMISSIONS FILE_DIRECTORY_PATH` | Set exact permissions, `ACCESS` can be `u`, `g`, `o` and PERMISSIONS can be `r`, `w`, `x`, `rx`, `rw`, `rwx` and ` ` for no permissions |
+| `chmod NNN FILE_DIRECTORY_PATH` | Set permissions in octal format, there are 3 digits, for user, group and others |
+
+> [!TIP]
+> ### COMBINED COMMANDS EXAMPLE
+> `chmod u+rw,g=r,o=x FILE_DIRECTORY_PATH`
+> `chmod 767 FILE_DIRECTORY_PATH`
+
+> [!NOTE]
+> * If a file have the permission `----rwxrwx` and the owner tries to read the file, would not be able to read it but any other user belonging to owner's group will be able to read it as the permissions are read and evaluated from left to right
+> * First it check the user, if it is owner then dont allow access then see group if user is in valid group, allow the file access
+
+> [!TIP]
+> ### PERMISSIONS and FILE IDENTIFYER
+> * We can see it in long listing format
+> ```
+> IDENTIFIER OWNER_PERM GROUP_PERM OTHERS_PERM
+> ```
+> * All of these can hve value of 
+>
+> | VALUE | OCTAL VALUE | PERMISSION |
+> | ----- | ----------- | ---------- |
+> | `---` | 0 | No permission |
+> | `r--` | 4 | Read |
+> | `-w-` | 2 | Write |
+> | `--x` | 1 | Execute |
+> | `rw-` | 6 | Read write |
+> | `r-x` | 5 | Read execute |
+> | `-wx` | 3 | Write execute |
+> | `rwx` | 7 | Read write execute |
+>
+> | FILE TYPE | IDENTIFIER |
+> | --------- | ---------- |
+> | Directory | `d` |
+> | Regular File | `-` |
+> | Character Device | `c` |
+> | Link | `l` |
+> | Socket File | `s` |
+> | Pipe | `p` |
+> | Block Device | `b` |
+
+## SUID and GUID
+* We want to give permission to other user but not full control over files like to delete or modify or access as root without permission
+* If a file sticky bit has given permission with execurion as sticky bit, if other user executes it, it runs with owner's permission, it will run as owner's user, not that user's permission, not as that user
+* If we see a `S` on running `ls -l`, stick bit set but no execute permission
+* If we see a `s` on running `ls -l`, sticky bit set and execute permission given
+* If we see a `T` on running `ls -l` in other permissions section, sticky bit set and no execute permission
+* If we see a `t` on running `ls -l` in other permissions section, sticky bit set and execute permission given
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `chmod SUGO FILE_DIRECTORY_PATH` | Define sticky bit for `SUID` and `GUID` and all of other user only to read it but can't delete, `S` can have the octal values `4` for user, `2` for group and `6` if sticky bit needs to be applied to both the group and user and `1` for others |
+| `find . -perm /N000` | Fing files with sticky bit, n can be `2`, `4`, `6` |
+
+## FIND FILES
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `find SEARCH_PATH -name FILE_DIRECTORY_PATH_TO_BE_SEARCHED` | Find files and directories |
+| `find -iname FILE_DIRECTORY_PATH_TO_BE_SEARCHED` | Find file and directories in case insensitive manner |
+| `find -name "REGEX"` | Find using regex |
+| `find -mmin -N` | Find files that were modified in last `N` minutes |
+| `find -mmin +N` | Find files modified atleast `N` minutes ago |
+| `find -mtime N` | Find files that were modified between last `N*24` and `(N-1)*24` hours ago |
+| `find -cmin -N` | See files whose permissions changed in last `N` minutes |
+| `find -size FILE_SIZE` | `FILE_SIZE` can be `Nk`, `nG`, `nc`, `nM` |
+| `find -size -FILE_SIZE` | `FILE_SIZE` can be `Nk`, `nG`, `nc`, `nM`, files less than the size |
+| `find -size +FILE_SIZE` | `FILE_SIZE` can be `Nk`, `nG`, `nc`, `nM`, files greater than the size |
+| `find -perm UGO` | Find files with exact permissions |
+| `find -perm -UGO` | Find files with at least these permissions |
+| `find -perm /UGO` | Find files with any of these permissions for respective user, group and others |
+
+> [!TIP]
+> OR condition in search expression `find SEARCH_PATH -size -FILE_SIZE -o -cmin -N`
+> The `-o`
+> NOT condition in search expression `find SEARCH_PATH --not -size -FILE_SIZE -o -cmin -N`, here NOT applies to only file size
+
+> [!TIP]
+> `Change time != Modification time`
+> Change time = time at which metadata was changed
+> Modification time = time at which file was modified
+
+## FILE EDITING AND ACCESSING
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `tail -n N FILE` `head -n N FILE` | See files in buffers with `N` lines |
+| `sed 's/WORD_TO_BE_REPLACED/WORD_THAT_TAKES_PLACE/g' FILE_PATH` | Replace all occurences of a sequence in a file |
+| `sed -i 's/WORD_TO_BE_REPLACED/WORD_THAT_TAKES_PLACE/g' FILE_PATH --in-place` | Replace inplace without printing in the terminal |
+| `sed 's/WORD_TO_BE_REPLACED/WORD_THAT_TAKES_PLACE' FILE_PATH` | Do not change the file but see the changes in terminal |
+| `cut -d 'DELIMITER' -f N FILE_PATH` | Get `N`th column from file where all columns are seperated by delimiter |
+| `uniq FILE_PATH` | Get unique entries from a file, NOTE: only consecutive repeating entries get removed |
+| `sort FILE_PATH` | Sort a file |
+| `sort FILE_PATH \| uniq` | Remove all repeating entries |
+
+> [!TIP]
+> `colordiff`
+> Pagers `less` `more`
+
+## SEARCH USING FILE
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `grep -i 'SEARCH_PATTERN' FILE_PATH` | Search for pattern in file without case sensitivity |
+| `grep -r 'SEARCH_PATTERN' DIRECTORY` | Search in all files in a directory |
+| `sudo grep -ri --color 'SEARCH_PATTERN' DIRECTORY` | Force color and avoid permission denied |
+| `grep -w 'SEARCH_PATTERN' FILE_PATH` | Search for exact word with non alphanumeric characters on both end |
+| `grep -o 'SEARCH_PATTERN' FILE_PATH` | Search for only matching pattern, do not print complete line, print only the matched pattern |
+
+## BACKUP and ARCHIVE
+
+> [!NOTE]
+> While extracting tarball, all files retain metadata like user access and many more things, so if `user1` created a file with `x` permission and `user2` copying it, it can give error while creation of that file because it is not owned by `user2`, in that case use `sudo`
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `tar --list --file TARBALL_FILE` | List content of tarball |
+| `tar --create --file TARBALL_FILE_PATH FILE_DIRECTORY_PATH` | Create a tarball |
+| `tar --append --file TARBALL_FILE_PATH FILE_DIRECTORY_PATH` | Add items to a existing tarball |
+| `tar --extract --file TARBALL_FILE_PATH` | Extract a tarball in current directory |
+| `tar --extract --file TARBALL_FILE_PATH --directory DIRECTORY_PATH` | Extract a tarball in specifie directory |
+
+## COMPRESSION
+* Mainly 3 utilities are there `gzip`, `bzip`, `xz`
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `gzip --keep TARBALL_FILE` | Compress |
+| `bzip2 --keep TARBALL_FILE` | Compress |
+| `xz --keep TARBALL_FILE` | Compress |
+| `gunzip --keep GZIP_FILE` or `gzip --keep --decompress GZIP_FILE` | Decompress |
+| `bunzip --keep BUNZIP_FILE` or `bzip2 --keep --decompress BUNZIP_FILE` | Decompress |
+| `unxz --keep XZ_FILE` or `xz --keep --decompress XZ_FILE` | Decompress |
+
 ## SAFELY BOOT REBOOT
 
 | COMMAND | EFFECT |
