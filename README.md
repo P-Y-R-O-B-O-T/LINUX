@@ -1028,7 +1028,7 @@ im
 > * What we have setup above using virtual network switch is unreachable from host network
 > * For that we need to add ip address to the virtual network `ip addr add 192.168.15.5/24 dev v-net-0`
 > * Now we can ping the ip addresses `192.168.15.1` and `192.168.15.2` from the host
-
+>
 > * Note that this whole private network is just accessable and contained within the host, we can't access it using outer computer and they also can't access internet
 > * It is the host which has the network namespaces and route table entry to reach outside machines and internet, and not the private networks and namespaces, we can chech them using
 >     - `ip netns exec blue route`
@@ -1050,7 +1050,7 @@ im
     - `ip netns exec red ip route add default via 192.168.15.5`
 > * We are routing default requests through `192.168.15.5` because it is the only way to reach the localhost from the network namespaces
 > * Now we can connect to internet, check `ip netns exec blue ping 8.8.8.8` and `ip netns exec red ping 8.8.8.8`
-
+>
 > * Still the ip address `192.168.1.3` the private network IP address cant reach the network namespaces because it does not know if it exists or how to reach it, solution to this can be to tell that host how to reach the network namespaces
     - `ip route add 192.168.15.0/24 via 192.168.1.1` running this command on `192.168.1.3` will allow it to reach the network namespaces
 > * Or we can add a port forwarding rule to localhost
