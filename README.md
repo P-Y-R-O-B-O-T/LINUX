@@ -238,9 +238,9 @@
 > ### FILE DESCRIPTORS
 > * File descriptors or file handles are integer identifiers that specify data structures
 > * 0 and 1 and 2 are reserved for stdin and stdout and stderr
-* Open a file Descriptor and assign it to a file `exec N<> FILE_PATH`, we must try to use `N` >= 3
-* Use the file descriptor as `COMMAND <&N`
-* Close the file descriptor `exec N>&-`
+> * Open a file Descriptor and assign it to a file `exec N<> FILE_PATH`, we must try to use `N` >= 3
+> * Use the file descriptor as `COMMAND <&N`
+> * Close the file descriptor `exec N>&-`
 
 > [!TIP]
 > Difference between `COMMAND &> FILE_PATH` and `COMMAND >& FILE_PATH` is that first one combines both streams into one and redirects to the fil but in second one, the outputs are not combined but redirected to same file
