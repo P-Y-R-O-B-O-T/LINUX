@@ -174,6 +174,11 @@
 | `tar --append --file TARBALL_FILE_PATH FILE_DIRECTORY_PATH` | Add items to a existing tarball |
 | `tar --extract --file TARBALL_FILE_PATH` | Extract a tarball in current directory |
 | `tar --extract --file TARBALL_FILE_PATH --directory DIRECTORY_PATH` | Extract a tarball in specifie directory |
+| `tar --create --gzip --file TARBALL_NAME.tar.gz FILE_DIRECTORY_PATH` | Pack and compress in same step |
+| `tar --create --bzip2 --file TARBALL_NAME.tar.bz2 FILE_DIRECTORY_PATH` | Pack and compress in same step |
+| `tar --create --xz --file TARBALL_NAME.tar.xz FILE_DIRECTORY_PATH` | Pack and compress in same step |
+| `tar --create --autocompress --file TARBALL_NAME.tar.COMPRESSION_EXTENSION FILE_DIRECTORY_PATH` | Auto compress |
+| `tar --extract --file TARBALL_NAME.tar.COMPRESSION_EXTENSION` | Auto extract |
 
 ## COMPRESSION
 * Mainly 3 utilities are there `gzip`, `bzip`, `xz`
@@ -187,7 +192,105 @@
 | `bunzip --keep BUNZIP_FILE` or `bzip2 --keep --decompress BUNZIP_FILE` | Decompress |
 | `unxz --keep XZ_FILE` or `xz --keep --decompress XZ_FILE` | Decompress |
 
-## SAFELY BOOT REBOOT
+## BACKING UP TO REMOTE SERVER
+* `rsync` is the remote directory sync tool which shares data that has changed in a while
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `rsync -a DIRECTORY_PATH/ USER_NAME@HOSTNAME_IP_DOMAINNAME:/PATH_TO_REMOTE_DIRECTORY/` | Backup Directory to remote directory |
+| `rsync -a USER_NAME@HOSTNAME_IP_DOMAINNAME:/PATH_TO_REMOTE_DIRECTORY/ DIRECTORY_PATH/` | Take backup from remote directory |
+| `rsync -a DIRECTORY_PATH1/ DIRECTORY_PATH/2` | Sync data between two local directories |
+
+> [!TIP]
+> ### BACK UP DISKS
+> * Make exact copy of disks as a single file (bit by bit copy)
+> * Make sure that the disk is un mounted before making a copy to avoid any write on the disk to avoid corruption of backup file
+> * `sudo dd if=/dev/PARTITION_NAME_DEVICE_NAME of=OUTPUT_FILE_PATH bs=1M status=progress`
+> * To restore the data to the disk on another disk or the same disk, just inter-change `if` and `of`
+
+## OUTPUT REDIRECTION
+
+> ### PIPES
+> * `COMMAND < FILE_PATH > OUTPUT_FILE_PATH`
+
+| COMMAND | EFFECT |
+| ------- | ------ |
+| `COMMMAND > FILE_PATH` | Overwrite |
+| `COMMAND >> FILE_PATH` | Append |
+| `COMMAND < FILE_PATH` | Read from `stdin`, can help us avoid giving input from keyboard |
+| `COMMAND 1> FILE_PATH` | Redirect to `stdout` |
+| `COMMAND 2> FILE_PATH` | Redirect to `stderr` |
+| `COMMAND 1> FILE1 2> FILE2` | Multiple redirection |
+| `COMMAND 1>> FILE1 2>> FILE2` | Multiple redirection |
+| `COMMAND > FILE_PATH 2>&1` | This exsures that all we see on screen gets captured in the file including the error and normal messages, this goes like redirect `stdout` to file and redirect `stderr` to `stdout` |
+| `COMMAND &> FILE_PATH` | Redirect both `stdout` and `stderr` to a file |
+| `COMMAND1 \| COMMAND2` | Redirect output of a program to input of another program, piping |
+
+> [!TIP]
+> Research around `&0`, `>&0` and `&1>&0`
+
+> [!IMPORTANT]
+> * **PIPEFAIL**
+> * `echo $?` prints exit status of last command
+
+> [!IMPORTANT]
+> ### FILE DESCRIPTORS
+> * File descriptors or file handles are integer identifiers that specify data structures
+> * 0 and 1 and 2 are reserved for stdin and stdout and stderr
+* Open a file Descriptor and assign it to a file `exec N<> FILE_PATH`, we must try to use `N` >= 3
+* Use the file descriptor as `COMMAND <&N`
+* Close the file descriptor `exec N>&-`
+
+> [!TIP]
+> Difference between `COMMAND &> FILE_PATH` and `COMMAND >& FILE_PATH` is that first one combines both streams into one and redirects to the fil but in second one, the outputs are not combined but redirected to same file
+
+> ### HEREDOC and HERESTRINGS
+> * Multiline text input
+> * `EOF` is a token and can be any string
+> ```
+> cat <<  EOF
+> ...
+> ...
+> ...
+> EOF
+> ```
+> ```
+> cat > FILE_PATH << EOF
+> ...
+> ...
+> ...
+> EOF
+> ```
+> * `COMMAND <<< "HUHU"`
+
+> [!TIP]
+> * Combine output redirection with `grep and find commands to avoid error messages`
+> * Redirect any unwanted error to `/dev/null` which is a device that accepts all garbage values and dumps it, it is also called the blackhole of linux
+> * `COMMAND > FILE_PATH 2>&1`, This ensures that all we see on screen gets captured in the file including the error and normal messages, this tells that standard error goes to standard out and standard out is going to a file, which captures all the error and normal messages
+
+## SSL and TLS
+* SSL was old name of TLS
+* For cryptographical operations
+
+> [!TIP]
+> * **OPENSSL USAGE**
+>     - Manage private, public keys and parameters
+>     - Public Key cryptography
+>     - Creation of `X.509` certs, CSR, CRL
+>     - Message digesting and hashing
+>     - Cipher encryptions
+>     - SSL/TLS client and server tests
+>     - Handling MIME in email and webpages
+>     - Timestamp request generation and verfication
+
+### GENERATE SSL CERTS X.509
+* `openssl` get list of all subcommands
+* `openssl req -newkey rsa:2048 -keyout key.pem -out req.pem` `req.pem` is the signing request
+* Enter the encryption phrase and other data
+* `openssl req -x509 -noenc -newkey rsa:4096 -days 3650 -keyout myprivate.key -out mycertificate.crt`, we should not use `-nokey` while in deployment
+* `openssl x509 -in mycertificate.crt -text`, see text form of certificate
+
+# SAFELY BOOT REBOOT
 
 | COMMAND | EFFECT |
 | ------- | ------ |
